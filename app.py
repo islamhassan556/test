@@ -56,16 +56,20 @@ model = joblib.load('best_svm_classifier.joblib')
 
 @app.route('/predict', methods=['POST'])
 def predict():
-    text = request.json.get('text')
+    
+    text = request.form['text']
 
-    # Clean and lemmatize the text
+    # NLP
     text = preprocess_text(text)
 
+    # TF-IDF vectorizer
     text_vectorized = tfidf_vectorizer.transform([text]).toarray()
 
-    predicted_label = model.predict(text_vectorized)[0]
+    # Prediction
+    predicted_disease = model.predict(text_vectorized)[0]
 
-    return jsonify({'predicted': predicted_label})
+    
+    return {'predicted': predicted_disease}
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=8080, debug=True)
