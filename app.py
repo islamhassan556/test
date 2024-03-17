@@ -57,7 +57,7 @@ model = joblib.load('best_svm_classifier.joblib')
 @app.route('/predict', methods=['POST'])
 def predict():
     
-    text = request.form['text']
+    text = request.form.get('text')
 
     # NLP
     text = preprocess_text(text)
