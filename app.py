@@ -69,7 +69,7 @@ def predict():
     predicted_disease = model.predict(text_vectorized)[0]
 
     
-    return {'predicted': predicted_disease}
+    return predicted_disease
 
 if __name__ == '__main__':
     app.run(debug=True)
