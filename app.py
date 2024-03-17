@@ -1,4 +1,4 @@
-from flask import Flask, request
+from flask import Flask, request, jsonify
 from nltk.tokenize import word_tokenize
 from nltk.corpus import stopwords
 from nltk.stem import WordNetLemmatizer
@@ -7,7 +7,7 @@ import nltk
 import joblib
 
 
-app = Flask(__name__)
+app = Flask(name)
 
 nltk.download('punkt')
 nltk.download('stopwords')
@@ -56,20 +56,16 @@ model = joblib.load('best_svm_classifier.joblib')
 
 @app.route('/predict', methods=['POST'])
 def predict():
-    
-    text = request.form.get('text')
+    text = request.json.get('text')
 
-    # NLP
+    # Clean and lemmatize the text
     text = preprocess_text(text)
 
-    # TF-IDF vectorizer
     text_vectorized = tfidf_vectorizer.transform([text]).toarray()
 
-    # Prediction
-    predicted_disease = model.predict(text_vectorized)[0]
+    predicted_label = model.predict(text_vectorized)[0]
 
-    
-    return predicted_disease
+    return jsonify({'predicted': predicted_label})
 
-if __name__ == '__main__':
+if name == 'main':
     app.run(host='0.0.0.0', port=8080, debug=True)
