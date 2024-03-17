@@ -7,7 +7,7 @@ import nltk
 import joblib
 
 
-app = Flask(name)
+app = Flask(__name__)
 
 nltk.download('punkt')
 nltk.download('stopwords')
@@ -67,5 +67,5 @@ def predict():
 
     return jsonify({'predicted': predicted_label})
 
-if name == 'main':
+if __name__ == '__main__':
     app.run(host='0.0.0.0', port=8080, debug=True)
