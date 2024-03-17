@@ -5,9 +5,11 @@ from nltk.stem import WordNetLemmatizer
 import string
 import nltk
 import joblib
+from flask_cors import CORS
 
 
 app = Flask(__name__)
+CORS(app)
 
 nltk.download('punkt')
 nltk.download('stopwords')
