@@ -8,7 +8,7 @@ import joblib
 from flask_cors import CORS
 
 
-app = Flask(_name_)
+app = Flask(__name__)
 CORS(app)
 
 nltk.download('punkt')
@@ -69,5 +69,5 @@ def predict():
 
     return jsonify({'predicted': predicted_label})
 
-if _name_ == '_main_':
+if __name__ == '__main__':
     app.run(host='0.0.0.0', port=8080, debug=True)
