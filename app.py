@@ -1,20 +1,21 @@
-from flask import Flask, request, jsonify, app
-from flask_cors import CORS
-import numpy as np
-import string
-import nltk
-import joblib
+.from flask import Flask, request, jsonify
 from nltk.tokenize import word_tokenize
 from nltk.corpus import stopwords
 from nltk.stem import WordNetLemmatizer
+import string
+import nltk
+import joblib
+from flask_cors import CORS
 
-# Initialize
-app = Flask(__name__)
+
+app = Flask(_name_)
 CORS(app)
 
 nltk.download('punkt')
 nltk.download('stopwords')
 nltk.download('wordnet')
+
+
 
 # NLP
 def lowercase_text(text):
@@ -39,7 +40,7 @@ def lemmatize_text(tokens):
     lemmatized_tokens = [lemmatizer.lemmatize(token) for token in tokens]
     return lemmatized_tokens
 
-# NLP Container function
+# Preprocessing Container function
 def preprocess_text(text):
     text = lowercase_text(text)
     text = remove_punctuation(text)
@@ -52,28 +53,21 @@ def preprocess_text(text):
 # Load the TF-IDF vectorizer
 tfidf_vectorizer = joblib.load('tfidf_vectorizer.joblib')
 
-# Load the SVM model
+# Load the Decision Tree Classifier
 model = joblib.load('best_svm_classifier.joblib')
 
 @app.route('/predict', methods=['POST'])
 def predict():
-    # Get input data from request
     text = request.json.get('text')
 
-    # NLP
+    # Clean and lemmatize the text
     text = preprocess_text(text)
 
-    # TF-IDF vectorizer
     text_vectorized = tfidf_vectorizer.transform([text]).toarray()
 
-    # Prediction
-    predicted_disease = model.predict(text_vectorized)[0]
-    predicted_proba = model.predict_proba(text_vectorized)[0]
-    score = predicted_proba[np.argmax(predicted_proba)]
-    if score > 0.60:
-        return jsonify({'predicted': predicted_disease}), 200 # disease
-    else:
-        return jsonify({'error': 'Please enter valid symptoms'}), 400 # error message
+    predicted_label = model.predict(text_vectorized)[0]
 
-if __name__ == '__main__':
-    app.run(debug=True)
+    return jsonify({'predicted': predicted_label})
+
+if _name_ == '_main_':
+    app.run(host='0.0.0.0', port=8080, debug=True)
