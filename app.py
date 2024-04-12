@@ -76,4 +76,4 @@ def predict():
         return jsonify({'error': 'Please enter valid symptoms'}), 400 # error message
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(debug=True, port=5000)
